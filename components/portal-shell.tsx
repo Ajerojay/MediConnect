@@ -105,7 +105,9 @@ export function PortalShell({
             </button>
           </form>
         </header>
-        <main className="p-4 sm:p-8">{children}</main>
+        <section aria-label="Workspace content" className="p-4 sm:p-8">
+          {children}
+        </section>
       </div>
     </div>
   );

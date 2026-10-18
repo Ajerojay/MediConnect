@@ -60,12 +60,10 @@ export class ApiExceptionFilter implements ExceptionFilter {
       }
     }
     if (status === 500) console.error(exception);
-    response
-      .status(status)
-      .json({
-        success: false,
-        error: { code, message, ...(details ? { details } : {}) },
-      });
+    response.status(status).json({
+      success: false,
+      error: { code, message, ...(details ? { details } : {}) },
+    });
   }
 }
 export const ok = <T>(data: T) => ({ success: true, data });

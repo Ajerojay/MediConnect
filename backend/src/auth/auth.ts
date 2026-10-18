@@ -64,12 +64,10 @@ export class JwtGuard implements CanActivate {
         "The access token is invalid or expired.",
       );
     }
-    const user = await this.ds
-      .getRepository(User)
-      .findOne({
-        where: { id: payload.sub },
-        relations: { patient: true, doctor: true },
-      });
+    const user = await this.ds.getRepository(User).findOne({
+      where: { id: payload.sub },
+      relations: { patient: true, doctor: true },
+    });
     if (!user?.isActive)
       throw new UnauthorizedException("The account is unavailable.");
     request.user = user;

@@ -7,7 +7,7 @@
     "start:dev": "npm run dev",
     "build": "npm run build --workspace backend && next build",
     "start": "node scripts/start.mjs",
-    "typecheck": "tsc --noEmit && npm run typecheck --workspace backend",
+    "typecheck": "next typegen && tsc --noEmit && npm run typecheck --workspace backend",
     "check": "npm run typecheck && npm run format:check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

@@ -1,0 +1,65 @@
+name: Verify MediConnect
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: CiDatabasePassword123
+          MYSQL_DATABASE: mediconnect
+          MYSQL_USER: mediconnect
+          MYSQL_PASSWORD: CiDatabasePassword123
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -pCiDatabasePassword123"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      MYSQL_MANAGED_LOCAL: "false"
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: "3306"
+      MYSQL_USER: mediconnect
+      MYSQL_PASSWORD: CiDatabasePassword123
+      MYSQL_DATABASE: mediconnect
+      JWT_SECRET: isolated-ci-only-jwt-signing-secret-for-integration-verification
+      BACKEND_URL: http://127.0.0.1:4000/api/v1
+      SEED_PATIENT_EMAIL: ci-patient@example.test
+      SEED_PATIENT_PASSWORD: CiAccountPassword123
+      SEED_DOCTOR_EMAIL: ci-doctor@example.test
+      SEED_DOCTOR_PASSWORD: CiAccountPassword123
+      SEED_ADMIN_EMAIL: ci-admin@example.test
+      SEED_ADMIN_PASSWORD: CiAccountPassword123
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - run: npm audit --omit=dev
+      - run: npm run db:setup
+      - name: Start API
+        run: |
+          node backend/dist/main.js > /tmp/mediconnect-api.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4000/api/v1/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/mediconnect-api.log
+          exit 1
+      - run: npm run test:api
