@@ -1,0 +1,12 @@
+node_modules
+.next
+.tmp
+.local
+output
+tmp
+backend/dist
+package-lock.json
+*.pdf
+*.png
+*.svg
+*.sql

@@ -1,0 +1,17 @@
+node_modules
+.next
+.env
+.env.local
+.env.*
+!.env.example
+*.log
+*.tsbuildinfo
+.vercel
+.sites-runtime
+.tmp
+.local/
+backend/dist/
+tmp/
+output/
+*.zip
+*.sql.gz
