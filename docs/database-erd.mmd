@@ -1,0 +1,74 @@
+erDiagram
+    appointments {
+        varchar id PK
+        varchar patientId FK
+        varchar doctorId FK
+        datetime startsAt
+        datetime endsAt
+        varchar reason
+        text notes
+        enum status
+        varchar cancellationReason
+        datetime createdAt
+        datetime updatedAt
+    }
+    doctors {
+        varchar id PK
+        varchar userId FK
+        varchar specialization
+        varchar licenseNumber UK
+        datetime createdAt
+        datetime updatedAt
+    }
+    medical_records {
+        varchar id PK
+        varchar patientId FK
+        varchar doctorId FK
+        varchar appointmentId FK
+        text diagnosis
+        text treatment
+        text consultationNotes
+        datetime visitDate
+        datetime createdAt
+        datetime updatedAt
+    }
+    patients {
+        varchar id PK
+        varchar userId FK
+        date dateOfBirth
+        varchar gender
+        varchar address
+        varchar emergencyContact
+        varchar bloodType
+        text allergies
+        datetime createdAt
+        datetime updatedAt
+    }
+    prescriptions {
+        varchar id PK
+        varchar medicalRecordId FK
+        varchar medication
+        varchar dosage
+        varchar frequency
+        varchar duration
+        varchar instructions
+    }
+    users {
+        varchar id PK
+        varchar email UK
+        varchar passwordHash
+        varchar fullName
+        varchar phone
+        enum role
+        tinyint isActive
+        datetime createdAt
+        datetime updatedAt
+    }
+    users ||--o| patients : has
+    users ||--o| doctors : has
+    patients ||--o{ appointments : books
+    doctors ||--o{ appointments : handles
+    patients ||--o{ medical_records : owns
+    doctors ||--o{ medical_records : writes
+    appointments o|--o| medical_records : documents
+    medical_records ||--o{ prescriptions : contains

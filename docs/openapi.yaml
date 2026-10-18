@@ -1,0 +1,1672 @@
+{
+  "openapi": "3.1.0",
+  "info":
+    {
+      "title": "MediConnect REST API",
+      "version": "1.0.0",
+      "description": "Hospital management backend implemented with NestJS, TypeORM and MySQL.",
+    },
+  "servers": [{ "url": "http://localhost:4000/api/v1" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths":
+    {
+      "/health":
+        {
+          "get":
+            {
+              "summary": "Database health",
+              "tags": ["health"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "security": [],
+            },
+        },
+      "/auth/register":
+        {
+          "post":
+            {
+              "summary": "Register a patient",
+              "tags": ["auth"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "201": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "security": [],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema": { "$ref": "#/components/schemas/Register" },
+                        },
+                    },
+                },
+            },
+        },
+      "/auth/login":
+        {
+          "post":
+            {
+              "summary": "Login and receive JWT",
+              "tags": ["auth"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "security": [],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        { "schema": { "$ref": "#/components/schemas/Login" } },
+                    },
+                },
+            },
+        },
+      "/auth/me":
+        {
+          "get":
+            {
+              "summary": "Current authenticated account",
+              "tags": ["auth"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+            },
+        },
+      "/patients":
+        {
+          "get":
+            {
+              "summary": "List patients",
+              "tags": ["patients"],
+              "description": "Allowed roles: ADMIN, DOCTOR. Returns the patient directory with pagination and name/email search.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "query",
+                    "name": "page",
+                    "schema": { "type": "integer", "minimum": 1, "default": 1 },
+                  },
+                  {
+                    "in": "query",
+                    "name": "limit",
+                    "schema":
+                      {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100,
+                        "default": 20,
+                      },
+                  },
+                  {
+                    "in": "query",
+                    "name": "search",
+                    "schema": { "type": "string", "maxLength": 100 },
+                  },
+                ],
+            },
+          "post":
+            {
+              "summary": "Create Patient",
+              "tags": ["patients"],
+              "description": "Allowed roles: ADMIN. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "201": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            { "$ref": "#/components/schemas/CreatePatient" },
+                        },
+                    },
+                },
+            },
+        },
+      "/patients/{id}":
+        {
+          "get":
+            {
+              "summary": "Get Patient",
+              "tags": ["patients"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+            },
+          "put":
+            {
+              "summary": "Replace Patient",
+              "tags": ["patients"],
+              "description": "Allowed roles: ADMIN, PATIENT. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            { "$ref": "#/components/schemas/ReplacePatient" },
+                        },
+                    },
+                },
+            },
+          "patch":
+            {
+              "summary": "Patch Patient",
+              "tags": ["patients"],
+              "description": "Allowed roles: ADMIN, PATIENT. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            { "$ref": "#/components/schemas/PatchPatient" },
+                        },
+                    },
+                },
+            },
+          "delete":
+            {
+              "summary": "Delete Patient",
+              "tags": ["patients"],
+              "description": "Allowed roles: ADMIN. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "204": { "description": "No content" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+            },
+        },
+      "/doctors":
+        {
+          "get":
+            {
+              "summary": "List doctors",
+              "tags": ["doctors"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "query",
+                    "name": "page",
+                    "schema": { "type": "integer", "minimum": 1, "default": 1 },
+                  },
+                  {
+                    "in": "query",
+                    "name": "limit",
+                    "schema":
+                      {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100,
+                        "default": 20,
+                      },
+                  },
+                  {
+                    "in": "query",
+                    "name": "search",
+                    "schema": { "type": "string", "maxLength": 100 },
+                  },
+                ],
+            },
+          "post":
+            {
+              "summary": "Create Doctor",
+              "tags": ["doctors"],
+              "description": "Allowed roles: ADMIN. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "201": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            { "$ref": "#/components/schemas/CreateDoctor" },
+                        },
+                    },
+                },
+            },
+        },
+      "/doctors/{id}":
+        {
+          "get":
+            {
+              "summary": "Get Doctor",
+              "tags": ["doctors"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+            },
+          "put":
+            {
+              "summary": "Replace Doctor",
+              "tags": ["doctors"],
+              "description": "Allowed roles: ADMIN. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            { "$ref": "#/components/schemas/ReplaceDoctor" },
+                        },
+                    },
+                },
+            },
+          "patch":
+            {
+              "summary": "Patch Doctor",
+              "tags": ["doctors"],
+              "description": "Allowed roles: ADMIN. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            { "$ref": "#/components/schemas/PatchDoctor" },
+                        },
+                    },
+                },
+            },
+          "delete":
+            {
+              "summary": "Delete Doctor",
+              "tags": ["doctors"],
+              "description": "Allowed roles: ADMIN. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "204": { "description": "No content" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+            },
+        },
+      "/appointments":
+        {
+          "get":
+            {
+              "summary": "List appointments",
+              "tags": ["appointments"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "query",
+                    "name": "page",
+                    "schema": { "type": "integer", "minimum": 1, "default": 1 },
+                  },
+                  {
+                    "in": "query",
+                    "name": "limit",
+                    "schema":
+                      {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100,
+                        "default": 20,
+                      },
+                  },
+                  {
+                    "in": "query",
+                    "name": "status",
+                    "schema":
+                      {
+                        "type": "string",
+                        "enum":
+                          ["PENDING", "APPROVED", "COMPLETED", "CANCELLED"],
+                      },
+                  },
+                ],
+            },
+          "post":
+            {
+              "summary": "Create Appointment",
+              "tags": ["appointments"],
+              "description": "Allowed roles: PATIENT. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "201": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "$ref": "#/components/schemas/CreateAppointment",
+                            },
+                        },
+                    },
+                },
+            },
+        },
+      "/appointments/{id}":
+        {
+          "get":
+            {
+              "summary": "Get Appointment",
+              "tags": ["appointments"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+            },
+          "put":
+            {
+              "summary": "Replace Appointment",
+              "tags": ["appointments"],
+              "description": "Allowed roles: ADMIN, PATIENT. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "$ref": "#/components/schemas/ReplaceAppointment",
+                            },
+                        },
+                    },
+                },
+            },
+          "patch":
+            {
+              "summary": "Patch Appointment",
+              "tags": ["appointments"],
+              "description": "Allowed roles: ADMIN, PATIENT. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            { "$ref": "#/components/schemas/PatchAppointment" },
+                        },
+                    },
+                },
+            },
+          "delete":
+            {
+              "summary": "Delete Appointment",
+              "tags": ["appointments"],
+              "description": "Allowed roles: ADMIN, PATIENT. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "204": { "description": "No content" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+            },
+        },
+      "/medical-records":
+        {
+          "get":
+            {
+              "summary": "List medical-records",
+              "tags": ["medical-records"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+            },
+          "post":
+            {
+              "summary": "Create MedicalRecord",
+              "tags": ["medical-records"],
+              "description": "Allowed roles: DOCTOR. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "201": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "$ref": "#/components/schemas/CreateMedicalRecord",
+                            },
+                        },
+                    },
+                },
+            },
+        },
+      "/medical-records/{id}":
+        {
+          "get":
+            {
+              "summary": "Get MedicalRecord",
+              "tags": ["medical-records"],
+              "description": "All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+            },
+          "put":
+            {
+              "summary": "Replace MedicalRecord",
+              "tags": ["medical-records"],
+              "description": "Allowed roles: ADMIN, DOCTOR. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "$ref": "#/components/schemas/ReplaceMedicalRecord",
+                            },
+                        },
+                    },
+                },
+            },
+          "patch":
+            {
+              "summary": "Patch MedicalRecord",
+              "tags": ["medical-records"],
+              "description": "Allowed roles: ADMIN, DOCTOR. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "$ref": "#/components/schemas/PatchMedicalRecord",
+                            },
+                        },
+                    },
+                },
+            },
+          "delete":
+            {
+              "summary": "Delete MedicalRecord",
+              "tags": ["medical-records"],
+              "description": "Allowed roles: ADMIN, DOCTOR. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "204": { "description": "No content" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+            },
+        },
+      "/appointments/{id}/status":
+        {
+          "patch":
+            {
+              "summary": "Change appointment status",
+              "tags": ["appointments"],
+              "description": "Allowed roles: PATIENT (cancel only), assigned DOCTOR, ADMIN. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "$ref": "#/components/schemas/AppointmentStatus",
+                            },
+                        },
+                    },
+                },
+            },
+        },
+      "/users":
+        {
+          "get":
+            {
+              "summary": "List users",
+              "tags": ["users"],
+              "description": "Allowed roles: ADMIN. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+            },
+        },
+      "/users/{id}":
+        {
+          "get":
+            {
+              "summary": "Get user",
+              "tags": ["users"],
+              "description": "Allowed roles: ADMIN. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+            },
+          "patch":
+            {
+              "summary": "Update account state and contact details",
+              "tags": ["users"],
+              "description": "Allowed roles: ADMIN. All resource operations enforce account status and applicable ownership rules.",
+              "responses":
+                {
+                  "200": { "description": "Successful response" },
+                  "400": { "description": "Malformed JSON" },
+                  "401": { "description": "Missing, invalid or expired JWT" },
+                  "403": { "description": "Role or ownership violation" },
+                  "404": { "description": "Resource not found" },
+                  "409":
+                    {
+                      "description": "State, schedule or relationship conflict",
+                    },
+                  "422": { "description": "Input validation failed" },
+                },
+              "parameters":
+                [
+                  {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "schema": { "type": "string", "format": "uuid" },
+                  },
+                ],
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            { "$ref": "#/components/schemas/PatchUser" },
+                        },
+                    },
+                },
+            },
+        },
+    },
+  "components":
+    {
+      "securitySchemes":
+        {
+          "bearerAuth":
+            { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" },
+        },
+      "schemas":
+        {
+          "Login":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "email":
+                    { "type": "string", "format": "email", "maxLength": 254 },
+                  "password":
+                    { "type": "string", "minLength": 8, "maxLength": 72 },
+                },
+              "required": ["email", "password"],
+            },
+          "Register":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "email":
+                    { "type": "string", "format": "email", "maxLength": 254 },
+                  "fullName":
+                    { "type": "string", "minLength": 2, "maxLength": 80 },
+                  "password":
+                    { "type": "string", "minLength": 8, "maxLength": 72 },
+                  "phone":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 30 },
+                          { "type": "null" },
+                        ],
+                    },
+                },
+              "required": ["email", "password", "fullName"],
+            },
+          "ReplacePatient":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "fullName":
+                    { "type": "string", "minLength": 2, "maxLength": 80 },
+                  "phone":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 30 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "dateOfBirth":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "format": "date" },
+                          { "type": "null" },
+                        ],
+                    },
+                  "gender":
+                    {
+                      "anyOf":
+                        [
+                          {
+                            "type": "string",
+                            "enum":
+                              ["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"],
+                          },
+                          { "type": "null" },
+                        ],
+                    },
+                  "address":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 300 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "emergencyContact":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 100 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "bloodType":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 5 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "allergies":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 500 },
+                          { "type": "null" },
+                        ],
+                    },
+                },
+              "required":
+                [
+                  "fullName",
+                  "phone",
+                  "dateOfBirth",
+                  "gender",
+                  "address",
+                  "emergencyContact",
+                  "bloodType",
+                  "allergies",
+                ],
+            },
+          "PatchPatient":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "fullName":
+                    { "type": "string", "minLength": 2, "maxLength": 80 },
+                  "phone":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 30 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "dateOfBirth":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "format": "date" },
+                          { "type": "null" },
+                        ],
+                    },
+                  "gender":
+                    {
+                      "anyOf":
+                        [
+                          {
+                            "type": "string",
+                            "enum":
+                              ["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"],
+                          },
+                          { "type": "null" },
+                        ],
+                    },
+                  "address":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 300 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "emergencyContact":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 100 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "bloodType":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 5 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "allergies":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 500 },
+                          { "type": "null" },
+                        ],
+                    },
+                },
+              "required": [],
+              "minProperties": 1,
+            },
+          "ReplaceDoctor":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "fullName":
+                    { "type": "string", "minLength": 2, "maxLength": 80 },
+                  "phone":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 30 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "specialization":
+                    { "type": "string", "minLength": 2, "maxLength": 100 },
+                  "licenseNumber":
+                    { "type": "string", "minLength": 2, "maxLength": 100 },
+                },
+              "required":
+                ["fullName", "phone", "specialization", "licenseNumber"],
+            },
+          "PatchDoctor":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "fullName":
+                    { "type": "string", "minLength": 2, "maxLength": 80 },
+                  "phone":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 30 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "specialization":
+                    { "type": "string", "minLength": 2, "maxLength": 100 },
+                  "licenseNumber":
+                    { "type": "string", "minLength": 2, "maxLength": 100 },
+                },
+              "required": [],
+              "minProperties": 1,
+            },
+          "ReplaceAppointment":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "startsAt":
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Must be in the future.",
+                    },
+                  "reason":
+                    { "type": "string", "minLength": 5, "maxLength": 500 },
+                  "notes":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 1000 },
+                          { "type": "null" },
+                        ],
+                    },
+                },
+              "required": ["startsAt", "reason", "notes"],
+            },
+          "PatchAppointment":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "startsAt":
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Must be in the future.",
+                    },
+                  "reason":
+                    { "type": "string", "minLength": 5, "maxLength": 500 },
+                  "notes":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 1000 },
+                          { "type": "null" },
+                        ],
+                    },
+                },
+              "required": [],
+              "minProperties": 1,
+            },
+          "ReplaceMedicalRecord":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "diagnosis":
+                    { "type": "string", "minLength": 2, "maxLength": 1000 },
+                  "treatment":
+                    { "type": "string", "minLength": 2, "maxLength": 2000 },
+                  "consultationNotes":
+                    { "type": "string", "minLength": 2, "maxLength": 5000 },
+                },
+              "required": ["diagnosis", "treatment", "consultationNotes"],
+            },
+          "PatchMedicalRecord":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "diagnosis":
+                    { "type": "string", "minLength": 2, "maxLength": 1000 },
+                  "treatment":
+                    { "type": "string", "minLength": 2, "maxLength": 2000 },
+                  "consultationNotes":
+                    { "type": "string", "minLength": 2, "maxLength": 5000 },
+                },
+              "required": [],
+              "minProperties": 1,
+            },
+          "CreatePatient":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "email":
+                    { "type": "string", "format": "email", "maxLength": 254 },
+                  "fullName":
+                    { "type": "string", "minLength": 2, "maxLength": 80 },
+                  "password":
+                    { "type": "string", "minLength": 8, "maxLength": 72 },
+                  "phone":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 30 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "dateOfBirth":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "format": "date" },
+                          { "type": "null" },
+                        ],
+                    },
+                  "gender":
+                    {
+                      "anyOf":
+                        [
+                          {
+                            "type": "string",
+                            "enum":
+                              ["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"],
+                          },
+                          { "type": "null" },
+                        ],
+                    },
+                  "address":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 300 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "emergencyContact":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 100 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "bloodType":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 5 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "allergies":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 500 },
+                          { "type": "null" },
+                        ],
+                    },
+                },
+              "required": ["email", "password", "fullName"],
+            },
+          "CreateDoctor":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "email":
+                    { "type": "string", "format": "email", "maxLength": 254 },
+                  "fullName":
+                    { "type": "string", "minLength": 2, "maxLength": 80 },
+                  "password":
+                    { "type": "string", "minLength": 8, "maxLength": 72 },
+                  "phone":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 30 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "specialization":
+                    { "type": "string", "minLength": 2, "maxLength": 100 },
+                  "licenseNumber":
+                    { "type": "string", "minLength": 2, "maxLength": 100 },
+                },
+              "required":
+                [
+                  "email",
+                  "password",
+                  "fullName",
+                  "specialization",
+                  "licenseNumber",
+                ],
+            },
+          "CreateAppointment":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "startsAt":
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Must be in the future.",
+                    },
+                  "reason":
+                    { "type": "string", "minLength": 5, "maxLength": 500 },
+                  "notes":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 1000 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "doctorId": { "type": "string", "format": "uuid" },
+                },
+              "required": ["doctorId", "startsAt", "reason"],
+            },
+          "CreateMedicalRecord":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "diagnosis":
+                    { "type": "string", "minLength": 2, "maxLength": 1000 },
+                  "treatment":
+                    { "type": "string", "minLength": 2, "maxLength": 2000 },
+                  "consultationNotes":
+                    { "type": "string", "minLength": 2, "maxLength": 5000 },
+                  "appointmentId": { "type": "string", "format": "uuid" },
+                  "prescriptions":
+                    {
+                      "type": "array",
+                      "maxItems": 20,
+                      "items":
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties":
+                            {
+                              "medication":
+                                { "type": "string", "maxLength": 200 },
+                              "dosage": { "type": "string", "maxLength": 100 },
+                              "frequency":
+                                { "type": "string", "maxLength": 100 },
+                              "duration":
+                                { "type": "string", "maxLength": 100 },
+                              "instructions":
+                                {
+                                  "anyOf":
+                                    [
+                                      { "type": "string", "maxLength": 500 },
+                                      { "type": "null" },
+                                    ],
+                                },
+                            },
+                          "required":
+                            ["medication", "dosage", "frequency", "duration"],
+                        },
+                      "default": [],
+                    },
+                },
+              "required":
+                [
+                  "appointmentId",
+                  "diagnosis",
+                  "treatment",
+                  "consultationNotes",
+                ],
+            },
+          "AppointmentStatus":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "status":
+                    {
+                      "type": "string",
+                      "enum": ["APPROVED", "COMPLETED", "CANCELLED"],
+                    },
+                  "reason": { "type": "string", "maxLength": 500 },
+                },
+              "required": ["status"],
+            },
+          "PatchUser":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties":
+                {
+                  "fullName":
+                    { "type": "string", "minLength": 2, "maxLength": 80 },
+                  "phone":
+                    {
+                      "anyOf":
+                        [
+                          { "type": "string", "maxLength": 30 },
+                          { "type": "null" },
+                        ],
+                    },
+                  "isActive": { "type": "boolean" },
+                },
+              "required": [],
+              "minProperties": 1,
+            },
+        },
+    },
+}

@@ -1,0 +1,21 @@
+{
+  "verifiedOn": "2026-10-19",
+  "timezone": "Asia/Manila",
+  "checks": {
+    "npm run check": "passed",
+    "npm run build": "passed: NestJS compilation and Next.js production build",
+    "npm run dev": "passed: portal ready on port 3001 and API ready on port 4000",
+    "npm run build followed by npm run start": "passed",
+    "npm audit": "0 vulnerabilities"
+  },
+  "environment": {
+    "database": "MySQL 8.0, isolated local database on port 3307",
+    "backend": "NestJS, TypeORM, JWT",
+    "frontend": "Next.js 15.5.28",
+    "secrets": "stored only in ignored local environment files"
+  },
+  "limitations": [
+    "Verification describes the tested environment and cases, not every possible runtime condition.",
+    "The student video recording and live presentation are separate deliverables."
+  ]
+}

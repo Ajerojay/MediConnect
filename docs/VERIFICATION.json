@@ -1,0 +1,16 @@
+{
+  "verifiedAt": "2026-10-18T16:07:42.597Z",
+  "runner": "Newman (Postman collection runner)",
+  "requests": {
+    "total": 44,
+    "pending": 0,
+    "failed": 0
+  },
+  "assertions": {
+    "total": 77,
+    "pending": 0,
+    "failed": 0
+  },
+  "failures": [],
+  "cleanup": "Only verification records created by this run are removed."
+}

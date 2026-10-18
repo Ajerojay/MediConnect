@@ -1,0 +1,114 @@
+{
+  "verifiedAt": "2026-10-18T16:17:45.312Z",
+  "runner": "HTTP page and security verification",
+  "results": [
+    {
+      "name": "PATIENT /patient/appointments",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "PATIENT /patient/medical-records",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "DOCTOR /doctor/schedule",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "DOCTOR /doctor/patients",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "DOCTOR /doctor/medical-records",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "DOCTOR2 /doctor/schedule",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "DOCTOR2 /doctor/patients",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "DOCTOR2 /doctor/medical-records",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "ADMIN /admin/users",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "ADMIN /admin/patients",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "ADMIN /admin/doctors",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "Protected portal without session",
+      "status": 307,
+      "expected": 307,
+      "passed": true
+    },
+    {
+      "name": "Wrong role portal redirect",
+      "status": 307,
+      "expected": 307,
+      "passed": true
+    },
+    {
+      "name": "Frontend database health",
+      "status": 200,
+      "expected": 200,
+      "passed": true
+    },
+    {
+      "name": "Compatibility proxy rejects missing token",
+      "status": 401,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "name": "Malformed JSON rejected",
+      "status": 400,
+      "expected": 400,
+      "passed": true
+    },
+    {
+      "name": "Invalid JWT rejected",
+      "status": 401,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "name": "Duplicate registration rejected",
+      "status": 409,
+      "expected": 409,
+      "passed": true
+    }
+  ]
+}
