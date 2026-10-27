@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "MediConnect REST API",
-    "description": "NestJS / TypeORM / MySQL API verification. Set patient, doctor and administrator credentials in collection variables. Run folders in order. Temporary records created by this collection are deleted by its cleanup requests.",
+    "description": "Local NestJS / TypeORM / MySQL API verification. Run npm run dev:offline or npm run api:offline, then use Postman Desktop with the local/desktop agent. No cloud database or internet is required after dependencies are installed. Set private patient, doctor and admin credentials in collection variables and run folders in order. Only synthetic records created by the collection are used for CRUD tests.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -1372,10 +1372,62 @@
           ]
         },
         {
-          "name": "Get administrator",
+          "name": "Create administration test patient",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/patients",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"account-control.{{runId}}@example.test\",\n  \"password\": \"Integration123!\",\n  \"fullName\": \"API Account Control\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set('runId', Date.now().toString());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "if(pm.response.code===201) { pm.collectionVariables.set('adminTestPatientId',pm.response.json().data.id); pm.collectionVariables.set('adminTestUserId',pm.response.json().data.user.id); }",
+                  "pm.test('No password hash in response', () => pm.expect(pm.response.text()).not.to.include('passwordHash'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get test user",
           "request": {
             "method": "GET",
-            "url": "{{baseUrl}}/users/{{adminUserId}}",
+            "url": "{{baseUrl}}/users/{{adminTestUserId}}",
             "auth": {
               "type": "bearer",
               "bearer": [
@@ -1400,10 +1452,10 @@
           ]
         },
         {
-          "name": "Update administrator",
+          "name": "Update test user",
           "request": {
             "method": "PATCH",
-            "url": "{{baseUrl}}/users/{{adminUserId}}",
+            "url": "{{baseUrl}}/users/{{adminTestUserId}}",
             "auth": {
               "type": "bearer",
               "bearer": [
@@ -1422,7 +1474,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"isActive\": true\n}",
+              "raw": "{\n  \"isActive\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1436,7 +1488,62 @@
               "script": {
                 "exec": [
                   "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
-                  "pm.test('No password hash in response', () => pm.expect(pm.response.text()).not.to.include('passwordHash'));"
+                  "pm.test('No password hash in response', () => pm.expect(pm.response.text()).not.to.include('passwordHash'));",
+                  "pm.test('Only the synthetic user is deactivated', () => pm.expect(pm.response.json().data.isActive).to.equal(false));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete administration test patient",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/patients/{{adminTestPatientId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('HTTP 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Verify administration test user deleted",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users/{{adminTestUserId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
                 ]
               }
             }

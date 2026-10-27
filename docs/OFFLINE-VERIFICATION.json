@@ -1,0 +1,97 @@
+{
+  "verifiedAt": "2026-10-27T02:49:56.967Z",
+  "projectDirectory": "C:/xampp/htdocs/MediConnect",
+  "runtime": {
+    "database": "Local MySQL 8.0 on 127.0.0.1:3307",
+    "authentication": "Local bcrypt password hashes and local JWT verification",
+    "api": "http://localhost:4000/api/v1",
+    "portal": "http://localhost:3000",
+    "defaultStartup": "npm run dev (loopback-only Node connections)",
+    "packageDownloadsDuringTesting": false
+  },
+  "checks": {
+    "typecheckAndFormatting": "passed",
+    "productionBuildWithNetworkGuard": "passed",
+    "defaultDevColdStart": "passed",
+    "apiOnlyColdStart": "passed",
+    "productionColdStart": "passed",
+    "postmanDesktopLocalModeHealth": 200,
+    "postmanCollection": {
+      "requests": 47,
+      "assertions": 82,
+      "failures": 0
+    },
+    "networkBoundary": [
+      {
+        "check": "External fetch blocked before network access",
+        "passed": true
+      },
+      {
+        "check": "External HTTP blocked",
+        "passed": true
+      },
+      {
+        "check": "External TCP blocked",
+        "passed": true
+      },
+      {
+        "check": "Loopback API and MySQL health allowed",
+        "passed": true
+      }
+    ],
+    "existingRecords": {
+      "users": {
+        "records": 4,
+        "unchanged": true
+      },
+      "patients": {
+        "records": 1,
+        "unchanged": true
+      },
+      "doctors": {
+        "records": 2,
+        "unchanged": true
+      },
+      "appointments": {
+        "records": 4,
+        "unchanged": true
+      },
+      "medical_records": {
+        "records": 1,
+        "unchanged": true
+      },
+      "prescriptions": {
+        "records": 0,
+        "unchanged": true
+      }
+    },
+    "roleLoginsAndPortals": [
+      {
+        "role": "PATIENT",
+        "loginStatus": 200,
+        "portalStatus": 200
+      },
+      {
+        "role": "DOCTOR",
+        "loginStatus": 200,
+        "portalStatus": 200
+      },
+      {
+        "role": "DOCTOR2",
+        "loginStatus": 200,
+        "portalStatus": 200
+      },
+      {
+        "role": "ADMIN",
+        "loginStatus": 200,
+        "portalStatus": 200
+      }
+    ],
+    "collectionWithEmptyNpmCache": "passed: locally installed runner; npm offline mode; 47 requests and 82 assertions"
+  },
+  "limitations": [
+    "Network restriction was applied to Node application/test connections; the Windows Wi-Fi adapter was not disabled.",
+    "Dependencies, MySQL binaries and the local database must remain installed on the prepared computer.",
+    "Postman web/cloud agents and cloud-only collection access are not required; use the desktop Local mode or individual requests in the lightweight offline client."
+  ]
+}

@@ -10,3 +10,6 @@ package-lock.json
 *.png
 *.svg
 *.sql
+
+.postman
+postman/globals

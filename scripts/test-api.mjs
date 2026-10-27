@@ -43,18 +43,15 @@ writeFileSync(
   }),
 );
 try {
-  const npmCli = process.env.npm_execpath;
-  if (!npmCli)
-    throw new Error("Run API verification through npm run test:api.");
+  const cliPath = `${root}/.local/api-testing/node_modules/newman/bin/newman.js`;
+  if (!existsSync(cliPath))
+    throw new Error(
+      "Local collection runner missing. Run npm run setup:testing once while internet is available.",
+    );
   const cli = spawn(
     process.execPath,
     [
-      npmCli,
-      "exec",
-      "--yes",
-      "--package=newman@6.2.3",
-      "--",
-      "newman",
+      cliPath,
       "run",
       `${root}/postman/MediConnect.postman_collection.json`,
       "--environment",
@@ -75,7 +72,8 @@ try {
   const summary = JSON.parse(readFileSync(reportFile, "utf8"));
   const results = {
     verifiedAt: new Date().toISOString(),
-    runner: "Newman (Postman collection runner)",
+    runner: "Locally installed Newman (no package downloads)",
+    offlineNetworkBoundary: process.env.NPM_CONFIG_OFFLINE === "true",
     requests: summary.run.stats.requests,
     assertions: summary.run.stats.assertions,
     failures: summary.run.failures.map((f) => ({
@@ -115,6 +113,7 @@ try {
     }
     for (const [key, table] of [
       ["Create patient", "patients"],
+      ["Create administration test patient", "patients"],
       ["Create doctor", "doctors"],
     ]) {
       const id = created[key];

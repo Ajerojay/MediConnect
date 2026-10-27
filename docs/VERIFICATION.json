@@ -1,13 +1,14 @@
 {
-  "verifiedAt": "2026-10-18T16:07:42.597Z",
-  "runner": "Newman (Postman collection runner)",
+  "verifiedAt": "2026-10-27T02:49:56.967Z",
+  "runner": "Locally installed Newman (no package downloads)",
+  "offlineNetworkBoundary": true,
   "requests": {
-    "total": 44,
+    "total": 47,
     "pending": 0,
     "failed": 0
   },
   "assertions": {
-    "total": 77,
+    "total": 82,
     "pending": 0,
     "failed": 0
   },
