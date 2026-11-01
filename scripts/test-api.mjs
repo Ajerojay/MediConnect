@@ -134,10 +134,7 @@ try {
     results.cleanup = "Verification cleanup needs attention.";
     process.exitCode = 1;
   }
-  writeFileSync(
-    `${root}/docs/VERIFICATION.json`,
-    JSON.stringify(results, null, 2) + "\n",
-  );
+  console.log(JSON.stringify(results, null, 2));
   if (results.failures.length || code !== 0) process.exitCode = 1;
 } finally {
   for (const file of [environmentFile, reportFile])

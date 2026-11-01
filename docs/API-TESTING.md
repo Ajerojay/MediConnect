@@ -19,7 +19,7 @@ The appointment must remain PENDING during the five-method demo. Approval and me
 
 Run `npm run setup:testing` once while internet is available. This installs pinned Newman 6.2.3 under ignored `.local/api-testing`, outside the application dependency tree.
 
-Then run `npm run test:offline` while the API is running. It launches the locally installed runner and restricts Node outbound connections to loopback; it never uses npm exec, npx or registry downloads. `npm run test:api` also uses the installed runner, without the explicit network guard. Credentials come from ignored `.env`, and a sanitized summary is written to `docs/VERIFICATION.json`. Only known records created by that run are removed. Existing appointments and medical records are preserved.
+Then run `npm run test:offline` while the API is running. It launches the locally installed runner and restricts Node outbound connections to loopback; it never uses npm exec, npx or registry downloads. `npm run test:api` also uses the installed runner, without the explicit network guard. Credentials come from ignored `.env`, and a sanitized summary is printed in the terminal without saving a permanent report. Only known records created by that run are removed. Existing appointments and medical records are preserved.
 
 If the runner is missing, the command stops with setup instructions instead of attempting an internet download.
 

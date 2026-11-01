@@ -49,7 +49,7 @@ See [API testing](docs/API-TESTING.md) for the five-method sequence. `npm run te
 
 Import `postman/MediConnect.postman_collection.json` into Postman. Configure the patient, doctor and administrator credentials in collection variables. Run the numbered folders in order. See [API testing](docs/API-TESTING.md).
 
-Run `npm run setup:testing` once while internet is available to install an isolated local Newman runner. With the seed credentials configured and the server running, `npm run test:offline` executes the same Postman collection with non-local Node connections blocked. No packages are downloaded during testing. Credentials and tokens are excluded from the saved verification summary.
+Run `npm run setup:testing` once while internet is available to install an isolated local Newman runner. With the seed credentials configured and the server running, `npm run test:offline` executes the same Postman collection with non-local Node connections blocked. No packages are downloaded during testing. Results appear in the terminal; no permanent verification report is saved. Temporary runner files are removed after the run.
 
 ## Quality and production commands
 
@@ -69,6 +69,5 @@ The setup command is an explicit development schema-initialization operation; AP
 - [Database design](docs/DATABASE.md)
 - [Final project documentation](docs/Final-Project-Documentation.pdf)
 - [SQL schema export](docs/database.sql)
-- [Verification results](docs/VERIFICATION.json)
 
 The project implements a backend prototype for academic evaluation. It does not include billing, admissions, laboratory processing or production healthcare compliance. The video recording and presentation remain separate submission deliverables.
